@@ -6,30 +6,33 @@ using UnityEngine.VFX;
 [RequireComponent(typeof(UnityEngine.AI.NavMeshAgent))]
 public class TankBotScript : MonoBehaviour
 {
+
+    [Header("RefferenceScripts")]
+    [SerializeField] public Move playerScr;
+    [SerializeField] public PulseObj pulseScr;
+    [Header("Transforms")]
+    [SerializeField] public Transform firePoint;
+    [SerializeField] public Transform player;
+    [SerializeField] public Transform TankObject;
+    [SerializeField] public Transform explosionPos;
     private UnityEngine.AI.NavMeshAgent TankBot;
-    private Transform player;
-    public Transform TankObject;
     private Vector3 fixPosition;
-    private Animator TBAnimations;
-    public Animator SliderAnimation;
-    public GameObject bulletPrefab;
-    public Transform firePoint;
-    [SerializeField] public float BossHealth = 2000f;
-    public Move playerScr;
-    public PulseObj pulseScr;
-     public float shootInterval = 1f; 
-     public AudioClip shootSF;
-     public AudioClip damageSF;
-     public AudioSource scr;
-    public int numberOfBullets = 3;
-    public Slider HealthBar;
-    public GameObject explosionDF;
-    public Transform explosionPos;
-
-
+    [Header("Stats")]
     private float MinShootTime = 5f;
     private float MaxShootTime = 10f;
     private float nextShootTime;
+    [SerializeField] public int numberOfBullets = 3;
+    [SerializeField] public float shootInterval = 1f; 
+    [SerializeField] public float BossHealth = 2000f;
+    [Header("Effects&Audio")]
+    private Animator TBAnimations;
+    [SerializeField] public Animator SliderAnimation;
+    [SerializeField] public GameObject bulletPrefab;
+    [SerializeField] public AudioClip shootSF;
+    [SerializeField] public AudioClip damageSF;
+    [SerializeField] public AudioSource scr;  
+    [SerializeField] public Slider HealthBar;
+    [SerializeField] public GameObject explosionDF;
     [SerializeField] private VisualEffect mozzeEffect;
 
     void Start()
@@ -82,9 +85,6 @@ public class TankBotScript : MonoBehaviour
 
      void OnCollisionEnter(Collision collider)
     {   
-    
-         Debug.Log("damnCuh");
-
     SwitchMaterialRecursive(transform);
 
          pulseScr.SwitchMaterial();
