@@ -3,20 +3,23 @@ using UnityEngine;
 
 public class SharkEnemy : MonoBehaviour
 {
-    public Transform target;
-    public float moveDistance = 1f;
-    public float moveDuration = 1f;
-    public float frequency = 0.5f;
-    public float rotationSpeed = 5f;
-    public float yRotation = 0f;
-    public PulseObj pulseObj;
-    public float Health = 200f;
-    public AudioSource player;
-    public AudioClip damage1;
-    public Move playerStats;
-    public GameObject xpDrop;
-    public GameObject explosionDF;
-    public Transform explosionPos;
+    [Header("EnemyStats")]
+    [SerializeField] public Transform target;
+    [SerializeField] public float moveDistance = 1f;
+    [SerializeField] public float moveDuration = 1f;
+    [SerializeField] public float frequency = 0.5f;
+    [SerializeField] public float rotationSpeed = 5f;
+    [SerializeField] public float Health = 200f;
+
+    [SerializeField] public float yRotation = 0f;
+    [SerializeField] public PulseObj pulseObj;
+    
+    [SerializeField] public AudioSource player;
+    [SerializeField] public AudioClip damage1;
+    [SerializeField] public Move playerStats;
+    [SerializeField] public GameObject xpDrop;
+    [SerializeField] public GameObject explosionDF;
+    [SerializeField] public Transform explosionPos;
 
     private float initialY;
 
@@ -33,7 +36,7 @@ public class SharkEnemy : MonoBehaviour
         if(Health <= 0f){
             Instantiate(xpDrop, transform.position, transform.rotation);
              explosionPos.position = transform.position;
-            explosionDF.SetActive(true);
+            explosionDF.SetActive(true);  
             Death();
         }
     }
