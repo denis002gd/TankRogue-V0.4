@@ -25,12 +25,14 @@ public class Move: MonoBehaviour
     public bool canShootRL = true;
     AudioSource audioSF;
     public AudioClip hitSF;
-    private AudioSource audioSource;
+    public AudioClip recharge;
     public AudioClip shotSound;
     public int Ammo = 1;
     public int MaxAmmo = 100;
     public float ReloadSpeed = 2.0f;
     public TextMeshProUGUI AmmoCount;
+    public float resetDistance = -0.5f;
+    public Slider HealthBar;
     
      
     public float playerDamage = 20f;
@@ -43,8 +45,6 @@ public class Move: MonoBehaviour
     }
     void Start()
     {
-        audioSource = gameObject.AddComponent<AudioSource>();
-        audioSource.clip = shotSound;
         nextFire = Time.time + fireInterval;
         playerRB = GetComponent<Rigidbody>();
         audioSF = GetComponent<AudioSource>();
@@ -59,6 +59,8 @@ public class Move: MonoBehaviour
         var rotateAmount = rotateSpeed * Time.deltaTime;
         Vector3 pulse = Vector3.back * kickpower;
         AmmoCount.text = Ammo.ToString();
+        HealthBar.maxValue = 10;
+        HealthBar.value = playerHealth;
 
         if (Input.GetKey("w"))
         {
@@ -84,9 +86,10 @@ public class Move: MonoBehaviour
         {
             string currentSceneName = SceneManager.GetActiveScene().name;
 
-        // Reload the current scene
+        
         SceneManager.LoadScene(currentSceneName);
         }
+
         if (Input.GetButton("Fire1") && Time.time > nextFire && canShoot && canShootRL)
         { 
             if(Ammo > 0){
@@ -125,7 +128,7 @@ public class Move: MonoBehaviour
     void fire()
     {
         var bullet = Instantiate(bulletObject, spawnPoint.position, spawnPoint.rotation);
-        audioSource.Play();
+        Shoot();
       
          
        
@@ -133,8 +136,7 @@ public class Move: MonoBehaviour
     private void OnTriggerEnter(Collider other) {
         if(other.CompareTag("Enemy bullet")){
              playerHealth--;
-                audioSF.clip = hitSF;
-                audioSF.Play();
+                Hit();
                  SwitchMaterialRecursive(transform);
 
                 // Set the player to be invincible and start the invincibility timer
@@ -171,6 +173,16 @@ public class Move: MonoBehaviour
               
             }
         }
+        if(other.gameObject.CompareTag("Wall")){
+          Vector3 bounceDirection = -other.contacts[0].normal;
+
+        // Define the distance to move away from the wall
+         // Adjust the distance based on your preference
+
+        // Move the player slightly away from the wall
+        transform.position += bounceDirection * resetDistance;
+        }
+        
     
     }
      public Vector3 GetFacingDirection()
@@ -180,7 +192,7 @@ public class Move: MonoBehaviour
 
     public IEnumerator Reloading(){
         
-      
+      Reload();
           yield return new WaitForSeconds(ReloadSpeed);
           Ammo = MaxAmmo;
           canShootRL = true;
@@ -201,5 +213,16 @@ public class Move: MonoBehaviour
         }
     }
     
-
+    void Hit(){
+                audioSF.clip = hitSF;
+                audioSF.Play();
+    }
+    void Reload(){
+        audioSF.clip = recharge;
+        audioSF.Play();
+    }
+    void Shoot(){
+        audioSF.clip = shotSound;
+        audioSF.Play();
+    }
 }
