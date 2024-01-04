@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: 265237c50a44b1f46bcc2efa18d01842
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - Particle: {instanceID: 0}
+  - shotSound: {fileID: 8300000, guid: 7da7af8ffffe8c64d96b77775da8587e, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
