@@ -76,7 +76,7 @@ public class GameManager : MonoBehaviour
         Timer.text = time.ToString("F1");
         if(slider != null){
         slider.value = totalCollectedParticles;
-        Health.text = playerStats.playerHealth.ToString();
+       
         }
         pointsIndicator.text = UpgradePoints.ToString();
         PointsBar.text = UpgradePoints.ToString();

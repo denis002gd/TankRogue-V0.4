@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
 
 public class Move: MonoBehaviour
 {
@@ -33,6 +34,8 @@ public class Move: MonoBehaviour
     public TextMeshProUGUI AmmoCount;
     public float resetDistance = -0.5f;
     public Slider HealthBar;
+    public LayerMask uiLayer;
+    public LayerMask overlayLayer;
     
      
     public float playerDamage = 20f;
@@ -59,7 +62,7 @@ public class Move: MonoBehaviour
         var rotateAmount = rotateSpeed * Time.deltaTime;
         Vector3 pulse = Vector3.back * kickpower;
         AmmoCount.text = Ammo.ToString();
-        HealthBar.maxValue = 10;
+        HealthBar.maxValue = 8;
         HealthBar.value = playerHealth;
 
         if (Input.GetKey("w"))
@@ -89,7 +92,8 @@ public class Move: MonoBehaviour
         
         SceneManager.LoadScene(currentSceneName);
         }
-
+if (!IsPointerOverUI() && !IsPointerOverOverlay())
+        {
         if (Input.GetButton("Fire1") && Time.time > nextFire && canShoot && canShootRL)
         { 
             if(Ammo > 0){
@@ -106,7 +110,7 @@ public class Move: MonoBehaviour
                   canShootRL = false;
             }
             
-         
+        }       
          
         }
         if(playerHealth <= 0){
@@ -212,6 +216,25 @@ public class Move: MonoBehaviour
             SwitchMaterialRecursive(child);
         }
     }
+     bool IsPointerOverUI()
+    {
+        // Raycast to check if the pointer is over UI elements
+        return EventSystem.current.IsPointerOverGameObject();
+    }
+     bool IsPointerOverOverlay()
+    {
+          // Raycast to check if the pointer is over the overlay
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hitInfo;
+
+        if (Physics.Raycast(ray, out hitInfo, Mathf.Infinity, overlayLayer))
+        {
+            return true; // Pointer is over the overlay
+        }
+
+        return false; // Pointer is not over the overlay
+    }
+    
     
     void Hit(){
                 audioSF.clip = hitSF;

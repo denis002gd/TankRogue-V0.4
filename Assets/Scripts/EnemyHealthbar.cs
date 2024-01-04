@@ -17,7 +17,9 @@ public class EnemyHealthbar : MonoBehaviour
     private FollowPlayer enemyFollow;
     public float bulletSpeed = 20;
     private bool hit = false;
-    private float damageCooldown = 0.2f;  // Set the cooldown duration in seconds
+    private float damageCooldown = 0.2f; 
+    public GameObject levelMan;
+    
 private float nextDamageTime;
 
      void LateUpdate() {
@@ -37,9 +39,8 @@ private float nextDamageTime;
         objectRender = GetComponent<Renderer>();
         xpDrop = GameObject.Find("Particle System");
         playerPos = GameObject.Find("Player").transform;
-         
-      
-    
+        levelMan = GameObject.Find("LevelManager");
+        
     }
 
     void Update()
@@ -65,6 +66,7 @@ private float nextDamageTime;
              nextDamageTime = Time.time + damageCooldown;
             if(currentHealth <= 0f){
                 Instantiate(xpDrop, transform.position, Quaternion.identity);
+              
                     Die();
 
             }}

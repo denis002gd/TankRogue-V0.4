@@ -5,10 +5,8 @@ public class Bullet : MonoBehaviour
     public float bulletLife = 5f;
     
     public GameObject Particle;
-    public float bulletSpeed = 20f;
+    public float bulletSpeed = 30f;
     public float reflectSpeed = 10f;
-    private AudioSource audioSource;
-    public AudioClip shotSound;
     GameObject Player;
     Move PLScript;
     Vector3 playerDirection;
@@ -16,7 +14,7 @@ public class Bullet : MonoBehaviour
     private Vector3 initialVelocity;
     private bool canAttack = false;
     public Material enemyCol;
-    public TrailRenderer trailRenderer;
+    
     
    
 
@@ -24,13 +22,12 @@ public class Bullet : MonoBehaviour
     {   
         if (Particle != null)
         {
-            Particle.SetActive(false);
+            Particle.SetActive(true);
             
            
         }
-        audioSource = gameObject.AddComponent<AudioSource>();
-        audioSource.clip = shotSound;
-        audioSource.Play();
+
+        
         Player = GameObject.Find("Player");
         PLScript = Player.GetComponent<Move>();
         gameObject.layer = LayerMask.NameToLayer("EnemyLayer");
@@ -53,7 +50,7 @@ public class Bullet : MonoBehaviour
 
 private void OnCollisionEnter(Collision coll)
 {
-    if (coll.collider.CompareTag("Enemy"))
+    if (coll.collider.CompareTag("Enemy") || coll.collider.CompareTag("Wall"))
     {
         if (Particle != null)
         {
@@ -80,7 +77,8 @@ private void OnCollisionEnter(Collision coll)
             gameObject.tag = "Enemy bullet";
             canAttack = true;
             GetComponent<Renderer>().material = enemyCol;
-            trailRenderer.enabled = false;
+            Particle.SetActive(false);
+            
             
         }
 }

@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class StatsManager : MonoBehaviour
 {
@@ -15,6 +16,8 @@ public class StatsManager : MonoBehaviour
     public Button openSettings;
     public Button closeSettings;
     public GameObject SettingsMenu;
+    public Button restartButton;
+    public Button menuButton;
     
     
     
@@ -23,6 +26,8 @@ public class StatsManager : MonoBehaviour
     {
         openSettings.onClick.AddListener(MenuOpen);
         closeSettings.onClick.AddListener(MenuClose);
+        restartButton.onClick.AddListener(Restart);
+        menuButton.onClick.AddListener(MenuBUTT);
         
         SFX.value = gameAudioSources[0].volume;
         
@@ -51,11 +56,21 @@ public class StatsManager : MonoBehaviour
     }
     void MenuOpen(){
         SettingsMenu.SetActive(true);
-        Time.timeScale = 0f;
+        Time.timeScale = 0.03f;
     }
     void MenuClose(){
         SettingsMenu.SetActive(false);
         Time.timeScale = 1f;
+    }
+    void MenuBUTT(){
+        Time.timeScale = 1f;
+       string currentSceneName = SceneManager.GetActiveScene().name;
+       SceneManager.LoadScene(currentSceneName);
+    }
+    void Restart(){
+        Time.timeScale = 1f;
+        string currentSceneName = SceneManager.GetActiveScene().name;
+        SceneManager.LoadScene(currentSceneName);
     }
  }
 

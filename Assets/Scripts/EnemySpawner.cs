@@ -24,7 +24,7 @@ public class EnemySpawner : MonoBehaviour
             
             // Update the next spawn time
             nextSpawnTime = Time.time + spawnInterval;
-        }
+        }  
     }
     void SpawnEnemyOutsideVision(int enemyIndex)
     {
