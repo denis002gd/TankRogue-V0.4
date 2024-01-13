@@ -36,6 +36,15 @@ public class Move: MonoBehaviour
     public Slider HealthBar;
     public LayerMask uiLayer;
     public LayerMask overlayLayer;
+    public CameraShake CamShake;
+    private bool canMove = true;
+    public float pushbackForce = 5f;
+    public float pushbackDuration = 0.5f;
+    public Transform aimmer;
+    public Transform pos1;
+    public Transform pos2;
+    public ParticleSystem MozzleFlash;
+    
     
      
     public float playerDamage = 20f;
@@ -64,15 +73,21 @@ public class Move: MonoBehaviour
         AmmoCount.text = Ammo.ToString();
         HealthBar.maxValue = 8;
         HealthBar.value = playerHealth;
-
+    if(canMove == true){
         if (Input.GetKey("w"))
-        {
-            transform.Translate(0, 0, transAmount);
-        }
-        if (Input.GetKey("s"))
-        {
-            transform.Translate(0, 0, -transAmount);
-        }
+    {
+        transform.Translate(0, 0, transAmount);
+        aimmer.position = pos1.position;
+    }
+    else if (Input.GetKey("s"))
+    {
+        transform.Translate(0, 0, -transAmount);
+        aimmer.position = pos2.position;
+    }
+    else
+    {
+        aimmer.position = transform.position;
+    }
         if (Input.GetKey("a") && transAmount > 0)
         {
             transform.Rotate(0, -rotateAmount, 0);
@@ -81,6 +96,7 @@ public class Move: MonoBehaviour
         {
             transform.Rotate(0, rotateAmount, 0);
         }
+    }
         if (Input.GetKey("r") && transAmount > 0)
         {
             Reloading();
@@ -132,22 +148,22 @@ if (!IsPointerOverUI() && !IsPointerOverOverlay())
     void fire()
     {
         var bullet = Instantiate(bulletObject, spawnPoint.position, spawnPoint.rotation);
+        MozzleFlash.Play();
         Shoot();
       
          
        
     }
     private void OnTriggerEnter(Collider other) {
-        if(other.CompareTag("Enemy bullet")){
+       if(other.CompareTag("Enemy bullet")){
              playerHealth--;
                 Hit();
                  SwitchMaterialRecursive(transform);
-
-                // Set the player to be invincible and start the invincibility timer
+              
                 isInvincible = true;
+                CamShake.StartShake();
                 invincibilityTimer = invincibilityDuration;
 
-                // Apply force to the player in the direction opposite to the collision
                 
         }
         if(other.CompareTag("XP")){
@@ -161,7 +177,8 @@ if (!IsPointerOverUI() && !IsPointerOverOverlay())
         {
             // Check if playerHealth is greater than zero before decreasing it
             if (playerHealth > 0)
-            {
+            {   
+                CamShake.StartShake();
                 playerHealth--;
                 audioSF.clip = hitSF;
                 audioSF.Play();
@@ -176,14 +193,44 @@ if (!IsPointerOverUI() && !IsPointerOverOverlay())
                 playerRB.AddForce(pushDirection.normalized * pushForce, ForceMode.Impulse);
               
             }
+         if (canMove && other.gameObject.CompareTag("Enemy"))
+    {
+        if (other.contacts.Length > 0)
+        {
+            Vector3 averageContactPoint = Vector3.zero;
+
+            // Calculate the average contact point
+            foreach (ContactPoint contactPoint in other.contacts)
+            {
+                averageContactPoint += contactPoint.point;
+            }
+
+            averageContactPoint /= other.contacts.Length;
+
+            Vector3 pushbackDirection = transform.position - averageContactPoint;
+            pushbackDirection.Normalize();
+
+            // Decrease the overall force by adjusting pushbackForce
+            float adjustedForce = pushbackForce * 0.5f; // Change the factor as needed
+
+            // Disable movement during pushback
+            canMove = false;
+
+            // Apply force for pushback with the adjusted force using AddForce
+            Rigidbody rb = GetComponent<Rigidbody>();
+            if (rb != null)
+            {
+                rb.AddForce(pushbackDirection * adjustedForce, ForceMode.Impulse);
+            }
+
+            // Enable movement after the pushback duration
+            Invoke("EnableMovement", pushbackDuration);
+        }
+    }
         }
         if(other.gameObject.CompareTag("Wall")){
           Vector3 bounceDirection = -other.contacts[0].normal;
 
-        // Define the distance to move away from the wall
-         // Adjust the distance based on your preference
-
-        // Move the player slightly away from the wall
         transform.position += bounceDirection * resetDistance;
         }
         
@@ -233,6 +280,11 @@ if (!IsPointerOverUI() && !IsPointerOverOverlay())
         }
 
         return false; // Pointer is not over the overlay
+    }
+
+    void EnableMovement()
+    { Debug.Log("Movement Enabled");
+        canMove = true;
     }
     
     

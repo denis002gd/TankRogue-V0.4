@@ -12,6 +12,7 @@ public class LevelManager : MonoBehaviour
     public Text EnemiesNR;
     public GameObject TankBot;
     public Transform TBtransform;
+    public GameObject TBheathbar;
 
 public Transform PlayerPos;
 
@@ -21,6 +22,7 @@ public Transform PlayerPos;
     void Start()
     {
         StartLevel();
+        TBheathbar.SetActive(false);
         
     }
 
@@ -39,6 +41,7 @@ public Transform PlayerPos;
         }
        if(currentLevelIndex == 10)
         {
+            
             TankBot.SetActive(true);
             enemiesRemaining++;
         }
@@ -83,9 +86,6 @@ IEnumerator SpawnEnemies(LevelData levelData)
             // All enemies defeated, progress to the next level
             currentLevelIndex++;
             StartCoroutine(NextLevel());
-        }
-        if(TankBot.GetComponent<TankBotScript>().BossHealth <= 0f){
-            currentLevelIndex++;
         }
     }
 

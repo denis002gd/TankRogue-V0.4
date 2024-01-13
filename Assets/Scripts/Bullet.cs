@@ -4,8 +4,10 @@ public class Bullet : MonoBehaviour
 {
     public float bulletLife = 5f;
     
-    public GameObject Particle;
-    public float bulletSpeed = 30f;
+    #pragma warning disable 0649
+[SerializeField] private GameObject Particle;  // Serialized variable
+#pragma warning restore 0649
+    public float bulletSpeed = 300f;
     public float reflectSpeed = 10f;
     GameObject Player;
     Move PLScript;
@@ -27,7 +29,6 @@ public class Bullet : MonoBehaviour
            
         }
 
-        
         Player = GameObject.Find("Player");
         PLScript = Player.GetComponent<Move>();
         gameObject.layer = LayerMask.NameToLayer("EnemyLayer");
@@ -58,29 +59,32 @@ private void OnCollisionEnter(Collision coll)
             Particle.SetActive(true);
         }
 
-
         // Destroy the bullet on collision with an enemy
         Destroy(gameObject);
     }
-    if(coll.collider.CompareTag("player") && canAttack){
+    else if (coll.collider.CompareTag("player") && canAttack)
+    {
         Destroy(gameObject);
     }
-       else if (coll.collider.CompareTag("bounceArea"))
+    else if (coll.collider.CompareTag("bounceArea"))
+    {
+        Rigidbody bulletRigidbody = gameObject.GetComponent<Rigidbody>();
+
+        // Calculate the reflection direction based on the velocity
+        Vector3 reflectionDirection = Vector3.Reflect(initialVelocity.normalized, coll.contacts[0].normal);
+
+        // Set the new direction for the bullet
+        bulletRigidbody.velocity = reflectionDirection * reflectSpeed;
+        gameObject.tag = "Enemy bullet";
+        canAttack = true;
+        GetComponent<Renderer>().material = enemyCol;
+
+        // Check if Particle is assigned before using it
+        if (Particle != null)
         {
-            Rigidbody bulletRigidbody = gameObject.GetComponent<Rigidbody>();
-
-            // Calculate the reflection direction based on the velocity
-            Vector3 reflectionDirection = Vector3.Reflect(initialVelocity.normalized, coll.contacts[0].normal);
-
-            // Set the new direction for the bullet
-            bulletRigidbody.velocity = reflectionDirection * reflectSpeed;
-            gameObject.tag = "Enemy bullet";
-            canAttack = true;
-            GetComponent<Renderer>().material = enemyCol;
             Particle.SetActive(false);
-            
-            
         }
+    }
 }
 
     void ScaleObject(float damage)

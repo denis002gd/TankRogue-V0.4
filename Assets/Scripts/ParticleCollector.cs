@@ -37,7 +37,7 @@ public class ParticleCollector : MonoBehaviour
         enter[i] = p;
          xpColect.Play();
         GameManager.Instance.IncrementCollectedParticleCount(); 
-        Destroy(this.gameObject,60);
+        Destroy(this.gameObject,6000);
         
     
         

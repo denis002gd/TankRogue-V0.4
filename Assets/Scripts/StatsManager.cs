@@ -17,7 +17,8 @@ public class StatsManager : MonoBehaviour
     public Button closeSettings;
     public GameObject SettingsMenu;
     public Button restartButton;
-    public Button menuButton;
+    public Button quitButton;
+    private bool isOpen = false;
     
     
     
@@ -27,7 +28,7 @@ public class StatsManager : MonoBehaviour
         openSettings.onClick.AddListener(MenuOpen);
         closeSettings.onClick.AddListener(MenuClose);
         restartButton.onClick.AddListener(Restart);
-        menuButton.onClick.AddListener(MenuBUTT);
+        quitButton.onClick.AddListener(QuitButton);
         
         SFX.value = gameAudioSources[0].volume;
         
@@ -35,6 +36,14 @@ public class StatsManager : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (isOpen)
+                MenuClose();
+            else
+                MenuOpen();
+        }
+
         Music.volume = musicSlider.value;
         if (playerStats != null)
         {
@@ -55,17 +64,19 @@ public class StatsManager : MonoBehaviour
         }
     }
     void MenuOpen(){
+        isOpen = true;
         SettingsMenu.SetActive(true);
         Time.timeScale = 0.03f;
     }
     void MenuClose(){
+        isOpen = false;
         SettingsMenu.SetActive(false);
         Time.timeScale = 1f;
     }
-    void MenuBUTT(){
+    void QuitButton(){
         Time.timeScale = 1f;
        string currentSceneName = SceneManager.GetActiveScene().name;
-       SceneManager.LoadScene(currentSceneName);
+       Application.Quit();
     }
     void Restart(){
         Time.timeScale = 1f;
