@@ -14,7 +14,6 @@ public class HealTower : MonoBehaviour
     private float health = 3f;
     private Animator drillEnemy;
     private AudioSource audioSou;
-    private float rotateAmount = 260f;
     private bool isFollowingPlayer = true;
     private float healRadius = 5f;
     private float healAmount = 20f;
@@ -22,11 +21,11 @@ public class HealTower : MonoBehaviour
     private LevelManager levelManager;
     private bool isDead = false;
 
-    [SerializeField] private GameObject pulseHeal;
+
     [SerializeField] private GameObject enemyDeathEffectPrefab;
     [SerializeField] private PulseObj pulseObjPrefab;
     [SerializeField] private GameObject xpDropPrefab;
-    [SerializeField] private GameObject healOrbPrefab;
+
 
     private Vector3 knockbackDirection;
 
@@ -35,6 +34,7 @@ public class HealTower : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         rb = GetComponent<Rigidbody>(); // Added Rigidbody component
         playerObj = GameObject.Find("Player");
+
 
         if (playerObj != null)
         {
@@ -49,14 +49,13 @@ public class HealTower : MonoBehaviour
 
         drillEnemy = GetComponent<Animator>();
         audioSou = GetComponent<AudioSource>();
-        pulseHeal = GameObject.Find("pulseHeal");
         levelManager = FindObjectOfType<LevelManager>();
 
         StartCoroutine(PeriodicHeal());
         StartCoroutine(FollowClosestEnemy());
     }
 
-     void Update()
+    void Update()
     {
         if (isDead)
             return;
@@ -66,10 +65,10 @@ public class HealTower : MonoBehaviour
             Death();
         }
 
-       
+
     }
 
-     void RotateToEnemy(Vector3 enemyPosition)
+    void RotateToEnemy(Vector3 enemyPosition)
     {
         Vector3 directionToEnemy = enemyPosition - transform.position;
         Quaternion targetRotation = Quaternion.LookRotation(directionToEnemy);
@@ -96,17 +95,25 @@ public class HealTower : MonoBehaviour
 
             if (enemies.Length > 0)
             {
+
                 enemies = enemies.OrderBy(enemy => Vector3.Distance(transform.position, enemy.transform.position)).ToArray();
+
+
                 GameObject closestEnemy = enemies[0];
+
                 Vector3 targetPosition = new Vector3(closestEnemy.transform.position.x, transform.position.y, closestEnemy.transform.position.z);
                 transform.LookAt(targetPosition);
-                agent.SetDestination(closestEnemy.transform.position); 
+                if (agent != null)
+                {
+                    agent.SetDestination(closestEnemy.transform.position);
+                }
+
                 RotateToEnemy(closestEnemy.transform.position);
                 yield return StartCoroutine(FollowEnemyUntilDead(closestEnemy));
             }
             else
             {
-                
+
                 Vector3 targetPosition = new Vector3(playerPos.position.x, transform.position.y, playerPos.position.z);
                 transform.LookAt(targetPosition);
                 agent.SetDestination(playerPos.position);
@@ -135,15 +142,15 @@ public class HealTower : MonoBehaviour
 
     private void OnCollisionEnter(Collision other)
     {
-        if (other.gameObject.CompareTag("player"))
+        if (other.gameObject.CompareTag("Bullet"))
         {
-            
+
             knockbackDirection = (transform.position - other.transform.position).normalized;
 
-           
+
             agent.isStopped = true;
 
-            
+
             rb.AddForce(knockbackDirection * 10f, ForceMode.Impulse);
 
 
@@ -158,7 +165,7 @@ public class HealTower : MonoBehaviour
         isFollowingPlayer = false;
 
         GameObject instantiatedMinXp = PrefabInstantiation.Instance.InstantiateMinXp(transform.position, Quaternion.Euler(-90f, 0f, 0f));
-    GameObject instantiatedPrefabB = PrefabInstantiation.Instance.InstantiatePrefabB(transform.position, Quaternion.Euler(-90f, 0f, 0f));
+        GameObject instantiatedPrefabB = PrefabInstantiation.Instance.InstantiatePrefabB(transform.position, Quaternion.Euler(-90f, 0f, 0f));
 
         isDead = true;
         levelManager.EnemyDefeated();
@@ -196,7 +203,6 @@ public class HealTower : MonoBehaviour
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(transform.position, healRadius);
     }
-
     void HealNearbyEnemies()
     {
         Collider[] colliders = Physics.OverlapSphere(transform.position, healRadius);
@@ -211,31 +217,44 @@ public class HealTower : MonoBehaviour
 
                 if (skScript != null)
                 {
-                    StartCoroutine(BlinkAndRestoreColor(skScript.gameObject));
+                    StartCoroutine(BlinkAndRestoreColor(skScript.gameObject, collider.transform));
                     skScript.health += healAmount;
                 }
                 if (deScript != null)
                 {
-                    StartCoroutine(BlinkAndRestoreColor(deScript.gameObject));
+                    StartCoroutine(BlinkAndRestoreColor(deScript.gameObject, collider.transform));
                     deScript.health += healAmount;
                 }
                 if (teScript != null)
                 {
-                    StartCoroutine(BlinkAndRestoreColor(teScript.gameObject));
+                    StartCoroutine(BlinkAndRestoreColor(teScript.gameObject, collider.transform));
                     teScript.health += healAmount;
                 }
             }
         }
     }
 
-    IEnumerator BlinkAndRestoreColor(GameObject obj)
+    IEnumerator BlinkAndRestoreColor(GameObject obj, Transform enemyPos)
     {
-        pulseHeal.SetActive(true);
+
         yield return new WaitForSeconds(0.2f);
-        GameObject orb = Instantiate(healOrbPrefab, obj.transform.position, Quaternion.identity);
+
+       
+        GameObject orb = PrefabInstantiation.Instance.InstantiatePulseHeal(enemyPos.position, enemyPos.rotation);
+
         yield return new WaitForSeconds(2f);
-        pulseHeal.SetActive(false);
+
+        Vector3 greenThingPos = new Vector3(transform.position.x, 0.51f, transform.position.z);
+        GameObject greenThing = PrefabInstantiation.Instance.InstantiateGreenCircle(greenThingPos, Quaternion.identity);
+
+       
+        greenThing.transform.Rotate(90f, 0f, 90f);
+        
+        Destroy(greenThing, 3f);
+
+       
         Destroy(orb);
+
     }
 }
 
