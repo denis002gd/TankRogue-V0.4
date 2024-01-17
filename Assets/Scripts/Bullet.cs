@@ -5,8 +5,8 @@ public class Bullet : MonoBehaviour
     public float bulletLife = 5f;
     
     #pragma warning disable 0649
-[SerializeField] private GameObject Particle;  // Serialized variable
-#pragma warning restore 0649
+    [SerializeField] private GameObject Particle;  // Serialized variable
+    #pragma warning restore 0649
     public float bulletSpeed = 300f;
     public float reflectSpeed = 10f;
     GameObject Player;
@@ -51,7 +51,7 @@ public class Bullet : MonoBehaviour
 
 private void OnCollisionEnter(Collision coll)
 {
-    if (coll.collider.CompareTag("Enemy") || coll.collider.CompareTag("Wall"))
+    if (coll.collider.CompareTag("Enemy") || coll.collider.CompareTag("Wall") || coll.collider.CompareTag("UniqueEnemy"))
     {
         if (Particle != null)
         {

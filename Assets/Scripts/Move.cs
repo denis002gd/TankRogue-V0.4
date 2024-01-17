@@ -44,6 +44,7 @@ public class Move: MonoBehaviour
     public Transform pos1;
     public Transform pos2;
     public ParticleSystem MozzleFlash;
+    public ParticleSystem arrows;
     
     
      
@@ -73,6 +74,7 @@ public class Move: MonoBehaviour
         AmmoCount.text = Ammo.ToString();
         HealthBar.maxValue = 8;
         HealthBar.value = playerHealth;
+        
     if(canMove == true){
         if (Input.GetKey("w"))
     {

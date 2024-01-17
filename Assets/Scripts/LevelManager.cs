@@ -22,7 +22,7 @@ public Transform PlayerPos;
     void Start()
     {
         StartLevel();
-        TBheathbar.SetActive(false);
+        TBheathbar.SetActive(false); 
         
     }
 
@@ -37,7 +37,7 @@ public Transform PlayerPos;
         if (currentLevelIndex < levels.Length)
         {
             enemiesRemaining = 0; // Reset the counter for the new level
-            StartCoroutine(SpawnEnemies(levels[currentLevelIndex]));
+            StartCoroutine(SpawnEnemies(levels[currentLevelIndex], 1f));
         }
        if(currentLevelIndex == 10)
         {
@@ -47,7 +47,7 @@ public Transform PlayerPos;
         }
     }
 
-IEnumerator SpawnEnemies(LevelData levelData)
+IEnumerator SpawnEnemies(LevelData levelData, float spawnRate)
 {
     foreach (var enemyInfo in levelData.enemies)
     {
@@ -70,7 +70,7 @@ IEnumerator SpawnEnemies(LevelData levelData)
                 }
                
 
-                yield return new WaitForSeconds(0.2f);
+                yield return new WaitForSeconds(spawnRate);
             }
         }
        
