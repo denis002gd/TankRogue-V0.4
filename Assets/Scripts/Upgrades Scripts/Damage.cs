@@ -15,6 +15,7 @@ public class Damage : MonoBehaviour
         DamageButton.onClick.AddListener(UPgradeDamage);
     }
 
+
     void UPgradeDamage(){
         if(points.UpgradePoints >= cost){
          playerStats.playerDamage += 10f;
