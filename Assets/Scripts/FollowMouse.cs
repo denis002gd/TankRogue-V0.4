@@ -5,36 +5,31 @@ using UnityEngine;
 public class FollowMouse : MonoBehaviour
 {
 
-  
-        public float rotationSpeed = 5f; // Adjust the rotation speed as needed
-        public static FollowMouse Instance;
-        public Vector3 facingDirection { get; private set; }
-        public float spingg;
-        public float yOfset;
+
+    public float rotationSpeed = 5f;
+    public static FollowMouse Instance;
+    public Vector3 facingDirection { get; private set; }
+    public float spingg;
+    public float yOfset;
 
     void Start()
     {
-       facingDirection = transform.forward;
+        facingDirection = transform.forward;
     }
-     void Awake()
+    void Awake()
     {
         Instance = this;
     }
     void FixedUpdate()
     {
-     Vector3 mouseScreenPosition = Input.mousePosition;
+        Vector3 mouseScreenPosition = Input.mousePosition;
 
         // Set a distance from the camera to the object
-        mouseScreenPosition.z = 10f; // Adjust the distance based on your scene
-
-        // Convert the screen position to a world point
+        mouseScreenPosition.z = 10f;
         Vector3 mouseWorldPosition = Camera.main.ScreenToWorldPoint(mouseScreenPosition);
+        mouseWorldPosition.y = transform.position.y;
+        mouseWorldPosition.x -= yOfset;
 
-        // Ensure the object only rotates on the Y-axis
-        mouseWorldPosition.y = transform.position.y; // Keep the current Y position
-         mouseWorldPosition.x -=yOfset;
-
-        // Calculate the direction from the object to the mouse position
         Vector3 direction = mouseWorldPosition - transform.position;
 
         // Calculate the rotation angle in degrees
@@ -45,10 +40,9 @@ public class FollowMouse : MonoBehaviour
 
         // Rotate the object smoothly toward the mouse position
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
-       
+
 
     }
-    
-    
-    }   
-    
+
+
+}

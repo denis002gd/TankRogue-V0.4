@@ -19,7 +19,7 @@ public class Shootingenemy : MonoBehaviour
 
     private float currentHealth;
     private bool canShoot = true;
-    private float damageCooldown = 0.2f;  // Set the cooldown duration in seconds
+    private float damageCooldown = 0.2f;
 private float nextDamageTime;
     
 
@@ -46,8 +46,6 @@ private float nextDamageTime;
         {
             // Calculate direction to the player
             Vector3 directionToPlayer = playerPos.position - transform.position;
-
-            // Check if the distance to the player is greater than the stopping distance
             if (distanceToPlayer > stoppingDistance)
             {
                 // Move towards the player
@@ -74,7 +72,6 @@ private float nextDamageTime;
     {
         if (other.CompareTag("Bullet"))
         {
-            // Player's bullet touched the enemy, apply damage
             TakeDamage();
         }
     }
@@ -83,9 +80,7 @@ private float nextDamageTime;
 
     void Shoot()
     {
-        // Instantiate a bullet at the shooting point
         GameObject bullet = Instantiate(bulletPrefab, shootingPoint.position, shootingPoint.rotation);
-        // Set the bullet's direction
         bullet.GetComponent<Rigidbody>().velocity = shootingPoint.forward * 5f;
     }
 
@@ -94,15 +89,8 @@ private float nextDamageTime;
     // Check if the cooldown period has elapsed
     if (Time.time >= nextDamageTime)
     {
-        // Apply damage to the enemy
         currentHealth -= playerMove.playerDamage;
-        
-
-        // Set the next allowed damage time based on the cooldown
         nextDamageTime = Time.time + damageCooldown;
-
-        // Check if the enemy is defeatedlog
-        Debug.Log("took damage");
         if (currentHealth <= 0)
         {
             if (xpDrop != null)
@@ -127,10 +115,7 @@ private float nextDamageTime;
     {
         // Calculate direction to the target
         Vector3 directionToTarget = (target.transform.position - shootingPoint.position).normalized;
-
-        // Instantiate a bullet at the shooting point with adjusted direction
         GameObject bullet = Instantiate(bulletPrefab, shootingPoint.position, Quaternion.LookRotation(directionToTarget));
-        // Set the bullet's direction
         bullet.GetComponent<Rigidbody>().velocity = directionToTarget * 10f;
     }
 }

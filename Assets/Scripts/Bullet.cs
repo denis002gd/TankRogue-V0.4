@@ -7,7 +7,6 @@ public class Bullet : MonoBehaviour
     #pragma warning disable 0649
     [SerializeField] private GameObject Particle;  // Serialized variable
     #pragma warning restore 0649
-    public float bulletSpeed = 300f;
     public float reflectSpeed = 10f;
     GameObject Player;
     Move PLScript;
@@ -16,6 +15,7 @@ public class Bullet : MonoBehaviour
     private Vector3 initialVelocity;
     private bool canAttack = false;
     public Material enemyCol;
+
     
     
    
@@ -25,6 +25,7 @@ public class Bullet : MonoBehaviour
         if (Particle != null)
         {
             Particle.SetActive(true);
+           
             
            
         }
@@ -36,7 +37,7 @@ public class Bullet : MonoBehaviour
         playerDirection = -transform.right;
 
          Rigidbody bulletRigidbody = gameObject.GetComponent<Rigidbody>();
-        initialVelocity = playerDirection * bulletSpeed;
+        initialVelocity = playerDirection * PLScript.BulletSpeed;
         bulletRigidbody.velocity = initialVelocity;
     }
 

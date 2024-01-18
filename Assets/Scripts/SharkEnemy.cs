@@ -69,21 +69,19 @@ public class SharkEnemy : MonoBehaviour
                 }
             }
 
-            // Wait for the specified frequency before starting the next move
+           
             yield return new WaitForSeconds(frequency);
         }
     }
 
     void CheckCollisions()
     {
-        Collider[] colliders = Physics.OverlapSphere(transform.position, 0.5f); // Adjust the radius based on your needs
+        Collider[] colliders = Physics.OverlapSphere(transform.position, 0.5f); // Adjust the radius
 
         foreach (Collider collider in colliders)
         {
             if (collider.CompareTag("Player") || collider.CompareTag("Enemy"))
             {
-                // Handle the collision with the player or enemy
-                // For example, stop movement or apply a force in the opposite direction
                 canMove = false;
             }
         }

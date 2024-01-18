@@ -57,7 +57,7 @@ IEnumerator SpawnEnemies(LevelData levelData, float spawnRate)
 
             for (int i = 0; i < enemyInfo.count; i++)
             {
-                // Calculate position on the circle using trigonometry
+                // Calculate position on the circle
                 float angle = Random.Range(0f, 360f);
                 float spawnX = player.transform.position.x + spawnRadius * Mathf.Cos(angle * Mathf.Deg2Rad);
                 float spawnZ = player.transform.position.z + spawnRadius * Mathf.Sin(angle * Mathf.Deg2Rad);

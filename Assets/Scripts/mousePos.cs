@@ -12,12 +12,10 @@ public class mousePos : MonoBehaviour
 
         // Calculate the direction from the object to the mouse position
         Vector3 lookDirection = worldMousePosition - transform.position;
-        lookDirection.y = 0f; // Ignore the Y-axis to preserve rotation on the Y-axis
+        lookDirection.y = 0f;
 
         // Rotate the object to face the mouse position
         transform.rotation = Quaternion.LookRotation(lookDirection.normalized, Vector3.up);
-
-        // Invert the rotation on the Y-axis
         transform.Rotate(fixRotation);
     }
 }
