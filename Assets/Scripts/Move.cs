@@ -15,9 +15,9 @@ public class Move : MonoBehaviour
     [SerializeField] private bool canMove = true;
     bool isWalking = false;
     bool isRotating = false;
-    [SerializeField] private bool isInvincible = false;
-    [SerializeField] private float invincibilityDuration = 1f;
-    [SerializeField] private float invincibilityTimer = 0f;
+    [SerializeField] public bool isInvincible = false;
+    [SerializeField] public float invincibilityDuration = 1f;
+    [SerializeField] public float invincibilityTimer = 0f;
     [SerializeField] public int playerHealth;
     [SerializeField] public float pushbackForce = 5f;
     [SerializeField] public float pushbackDuration = 0.5f;
@@ -347,6 +347,7 @@ public class Move : MonoBehaviour
     {
         audioSF.clip = shotSound;
         audioSF.pitch = Random.Range(1.50f, 1.90f);
+        audioSF.volume = 0.1f;
         audioSF.Play();
     }
 
@@ -354,6 +355,7 @@ public class Move : MonoBehaviour
     {
         walkAudioSource.clip = walkSound;
         walkAudioSource.pitch = 1.5f;
+        walkAudioSource.volume = 0.2f;
     
         walkAudioSource.Play();
     }
@@ -370,7 +372,7 @@ public class Move : MonoBehaviour
     {
         rotateAudioSource.clip = rotateSoundFX;
         rotateAudioSource.pitch = 1.3f;
-       
+        rotateAudioSource.volume = 0.2f;
         rotateAudioSource.Play();
     }
 
