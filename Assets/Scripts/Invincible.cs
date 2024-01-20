@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class LowLevelAbiliities : MonoBehaviour
+public class Invincible : MonoBehaviour
 {
     public Move playerStats;
     public GameManager gameManager;
     public ActivesScript activesActivation;
     private float coolDown = 5f;
-    private float originalReloadSpeed;
-    private float originalFireRate;
     private float lastUsedTime;
     private bool wasBought = false;
     public Color originalCol;
@@ -26,22 +24,18 @@ public class LowLevelAbiliities : MonoBehaviour
     {
         boughtButton.onClick.AddListener(WasAlreadyBought);
         lastUsedTime = -coolDown;
-        originalReloadSpeed = playerStats.ReloadSpeed;
-        originalFireRate = playerStats.fireInterval;
     }
 
     void Update()
     {
         // Check if enough time has passed since the last use
-        if (Time.time > lastUsedTime + coolDown + 5f)
+        if (Time.time > lastUsedTime + coolDown)
         {
-            // If 10 seconds have passed since the last use, reset ReloadSpeed to the original value
-            playerStats.ReloadSpeed = originalReloadSpeed;
-            playerStats.fireInterval = originalFireRate;
+            playerStats.isInvincible = false;
         }
         if (wasBought)
         {
-            if (activesActivation.abilityId == 1)
+            if (activesActivation.abilityId == 2)
             {
                 inUse = true;
             }
@@ -55,22 +49,21 @@ public class LowLevelAbiliities : MonoBehaviour
         }
     }
 
-    public void NoReload()
+    public void IncincibleStart()
     {
         if (wasBought)
         {
             // Check if enough time has passed since the last use
             if (Time.time > lastUsedTime + coolDown)
             {
-                // Apply the ability effects
-                playerStats.ReloadSpeed = 0f;
-                playerStats.fireInterval -= 0.1f;
+                playerStats.invincibilityTimer = 5f;
+                playerStats.isInvincible = true;
                 lastUsedTime = Time.time;
             }
             else
             {
-                // If not enough time has passed, reset ReloadSpeed to the original value
-                playerStats.ReloadSpeed = originalReloadSpeed;
+                playerStats.isInvincible = false;
+
             }
         }
     }
@@ -79,7 +72,9 @@ public class LowLevelAbiliities : MonoBehaviour
     {
         if (wasBought && inUse)
         {
-            activesActivation.abilityId = 1;
+            activesActivation.abilityId = 2;
+            priceText.text = ("Activated!");
+
             Debug.Log("already bought");
         }
         else
@@ -88,16 +83,19 @@ public class LowLevelAbiliities : MonoBehaviour
         }
     }
 
+
+
+
     public void BuyButton()
     {
         wasBought = true;
-        activesActivation.abilityId = 1;
+        activesActivation.abilityId = 2;
         activesActivation.noAbility = true;
-        gameManager.UpgradePoints -= 15;
+        activesActivation.waitTime = 5f;
+        activesActivation.rechargeTime = 15f;
+        gameManager.UpgradePoints -= 10;
         priceText.text = ("Activated!");
         Debug.Log("ill buy it!");
-        activesActivation.waitTime = 10f;
-        activesActivation.rechargeTime = 30f;
         backgroundImage.color = Color.green;
         Destroy(price);
     }
