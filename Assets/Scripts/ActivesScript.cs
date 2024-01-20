@@ -9,10 +9,15 @@ public class ActivesScript : MonoBehaviour
     public Image abilityOverlay;
     public Text countdownText;
     public bool coolingDown;
-    private float waitTime = 10f;
+    public float waitTime = 10f;
+    public float rechargeTime;
     public LowLevelAbiliities abilities1;
     private float cooldownTimer;
     private float additionalCooldownTimer;
+    public int abilityId;
+    public bool noAbility = false;
+    [Header("abilities")]
+    public Invincible ability2;
 
     void Start()
     {
@@ -28,53 +33,55 @@ public class ActivesScript : MonoBehaviour
     void Update()
     {
         CheckKeyPress();
-
-        if (coolingDown)
-        {
-            cooldownTimer += Time.deltaTime;
-
-            // Calculate the fill amount from 0 to 1
-            float fillAmount = Mathf.Clamp01(cooldownTimer / (waitTime));
-            abilityOverlay.fillAmount = 0.0f + fillAmount;
-
-            if (cooldownTimer >= waitTime)
+        
+        
+            if (coolingDown)
             {
-                coolingDown = false;
-                abilityOverlay.fillAmount = 1.0f; // Set fill amount to 0 when cooldown is complete
-                additionalCooldownTimer = 30.0f; // Start the additional cooldown timer
-                HideCountdownText();
+                cooldownTimer += Time.deltaTime;
+
+                // Calculate the fill amount from 0 to 1
+                float fillAmount = Mathf.Clamp01(cooldownTimer / (waitTime));
+                abilityOverlay.fillAmount = 0.0f + fillAmount;
+
+                if (cooldownTimer >= waitTime)
+                {
+                    coolingDown = false;
+                    abilityOverlay.fillAmount = 1.0f; // Set fill amount to 0 when cooldown is complete
+                    additionalCooldownTimer = rechargeTime; // Start the additional cooldown timer
+                    HideCountdownText();
+                }
             }
-        }
 
-        // Additional cooldown timer after the main cooldown is complete
-        if (additionalCooldownTimer > 0)
-        {
-            additionalCooldownTimer -= Time.deltaTime;
-
-            // Update countdown text
-            int countdownValue = Mathf.CeilToInt(additionalCooldownTimer);
-            countdownText.text = countdownValue.ToString();
-
-            if (additionalCooldownTimer <= 0)
+            // Additional cooldown timer after the main cooldown is complete
+            if (additionalCooldownTimer > 0)
             {
-                // Additional cooldown is complete, allow using the ability again
-                ResetAbilities();
-                abilityOverlay.fillAmount = 0.0f; // Set fill amount to 0 when the additional cooldown is complete
+                additionalCooldownTimer -= Time.deltaTime;
+
+                // Update countdown text
+                int countdownValue = Mathf.CeilToInt(additionalCooldownTimer);
+                countdownText.text = countdownValue.ToString();
+
+                if (additionalCooldownTimer <= 0)
+                {
+                    // Additional cooldown is complete, allow using the ability again
+                    ResetAbilities();
+                    abilityOverlay.fillAmount = 0.0f; // Set fill amount to 0 when the additional cooldown is complete
+                }
+                else
+                {
+                    ShowCountdownText();
+                }
             }
             else
             {
-                ShowCountdownText();
+                HideCountdownText();
             }
-        }
-        else
-        {
-            HideCountdownText();
-        }
+        
     }
 
     void CheckKeyPress()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1) && !coolingDown && additionalCooldownTimer <= 0)
+        if (Input.GetKeyDown(KeyCode.Alpha1) && !coolingDown && additionalCooldownTimer <= 0 && noAbility)
         {
             ability.onClick.Invoke();
             coolingDown = true;
@@ -84,8 +91,7 @@ public class ActivesScript : MonoBehaviour
 
     void AbilityLogic()
     {
-        Debug.Log("ability used");
-        abilities1.NoReload();
+        CheckAbilityId(abilityId);
     }
 
     void SpawnerLogic()
@@ -112,5 +118,24 @@ public class ActivesScript : MonoBehaviour
     void HideCountdownText()
     {
         countdownText.gameObject.SetActive(false);
+    }
+    void CheckAbilityId(int abilityId)
+    {
+        Debug.Log(abilityId);
+        switch (abilityId)
+        {
+            case 1:
+                abilities1.NoReload();
+                
+                break;
+
+            case 2:
+                ability2.IncincibleStart();
+                break;
+
+            default:
+              
+                break;
+        }
     }
 }
