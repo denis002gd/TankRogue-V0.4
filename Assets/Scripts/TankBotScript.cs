@@ -15,6 +15,7 @@ public class TankBotScript : MonoBehaviour
     [SerializeField] public Transform player;
     [SerializeField] public Transform TankObject;
     [SerializeField] public Transform explosionPos;
+    [SerializeField] public GameObject Slider;
     private UnityEngine.AI.NavMeshAgent TankBot;
     private Vector3 fixPosition;
     [Header("Stats")]
@@ -44,6 +45,8 @@ public class TankBotScript : MonoBehaviour
         StartCoroutine(UpdatePath());
         HealthBar.maxValue = BossHealth;
         nextShootTime = Time.time;
+        Slider.SetActive(true);
+      
     }
 
     void Update()
@@ -85,12 +88,13 @@ public class TankBotScript : MonoBehaviour
 
      void OnCollisionEnter(Collision collider)
     {   
-    SwitchMaterialRecursive(transform);
-
-         pulseScr.SwitchMaterial();
-         DamagaSFX();
-        BossHealth -= playerScr.playerDamage;
-    
+        if (collider.gameObject.CompareTag("Bullet"))
+        {
+            SwitchMaterialRecursive(transform);
+            pulseScr.SwitchMaterial();
+            DamagaSFX();
+            BossHealth -= playerScr.playerDamage;
+        }
        
     }
      IEnumerator ShootThreeBullets()
