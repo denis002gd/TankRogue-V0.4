@@ -24,6 +24,7 @@ public class Move : MonoBehaviour
     [SerializeField] public float resetDistance = -0.5f;
     [SerializeField] public bool canShoot = true;
     [SerializeField] public bool canShootRL = true;
+    [SerializeField] public bool canBeHit;
     public static Move Instance;
     [Header("Weapon Stats")]
     [SerializeField] public float playerDamage = 20f;
@@ -78,7 +79,11 @@ public class Move : MonoBehaviour
     {
         var transAmount = speed * Time.deltaTime;
         var rotateAmount = rotateSpeed * Time.deltaTime;
-        //ui stuff
+        if (!canBeHit)
+        {
+            Debug.Log(canBeHit);
+        }
+      
         AmmoCount.text = Ammo.ToString();
         HealthBar.maxValue = 8;
         HealthBar.value = playerHealth;
@@ -191,16 +196,17 @@ public class Move : MonoBehaviour
             if (isInvincible)
             {
                 invincibilityTimer -= Time.deltaTime;
-
+                Debug.Log("invincible");
                 if (invincibilityTimer <= 0f)
                 {
                     isInvincible = false;
+                    
                 }
             }
         }
     }
 
-    void fire()
+    public void fire()
     {
         var bullet = Instantiate(bulletObject, spawnPoint.position, spawnPoint.rotation);
         MozzleFlash.Play();
@@ -227,7 +233,7 @@ public class Move : MonoBehaviour
     private void OnCollisionEnter(Collision other)
     {
         float pushForce = 150f;
-        if (!isInvincible && (other.gameObject.CompareTag("Enemy") || other.gameObject.CompareTag("Enemy bullet")))
+        if (!isInvincible && (other.gameObject.CompareTag("Enemy") || other.gameObject.CompareTag("Enemy bullet")) && canBeHit)
         {
             if (playerHealth > 0)
             {
@@ -364,7 +370,7 @@ public class Move : MonoBehaviour
     {
         walkAudioSource.clip = walkSound;
         walkAudioSource.pitch = 1.3f;
- 
+        walkAudioSource.volume = 0.5f;
         walkAudioSource.Play();
     }
 

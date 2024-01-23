@@ -18,6 +18,8 @@ public class ActivesScript : MonoBehaviour
     public bool noAbility = false;
     [Header("abilities")]
     public Invincible ability2;
+    public Dash ability3;
+    public Reflection ability4;
 
     void Start()
     {
@@ -81,7 +83,7 @@ public class ActivesScript : MonoBehaviour
 
     void CheckKeyPress()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1) && !coolingDown && additionalCooldownTimer <= 0 && noAbility)
+        if (Input.GetKeyDown(KeyCode.Space) && !coolingDown && additionalCooldownTimer <= 0 && noAbility)
         {
             ability.onClick.Invoke();
             coolingDown = true;
@@ -132,7 +134,12 @@ public class ActivesScript : MonoBehaviour
             case 2:
                 ability2.IncincibleStart();
                 break;
-
+            case 3:
+                ability3.DashStart();
+                break;
+            case 4:
+             
+                break;
             default:
               
                 break;
