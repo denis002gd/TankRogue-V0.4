@@ -28,10 +28,10 @@ public class Invincible : MonoBehaviour
 
     void Update()
     {
-        // Check if enough time has passed since the last use
         if (Time.time > lastUsedTime + coolDown)
         {
             playerStats.isInvincible = false;
+            playerStats.canBeHit = true;
         }
         if (wasBought)
         {
@@ -43,7 +43,6 @@ public class Invincible : MonoBehaviour
             {
                 inUse = false;
                 priceText.text = ("Deactivated");
-                Debug.Log("already bought, but not used");
                 backgroundImage.color = Color.red;
             }
         }
@@ -53,16 +52,18 @@ public class Invincible : MonoBehaviour
     {
         if (wasBought)
         {
-            // Check if enough time has passed since the last use
+           
             if (Time.time > lastUsedTime + coolDown)
             {
                 playerStats.invincibilityTimer = 5f;
-                playerStats.isInvincible = true;
+               
                 lastUsedTime = Time.time;
+                playerStats.canBeHit = false;
             }
             else
             {
-                playerStats.isInvincible = false;
+                
+                playerStats.canBeHit = true;
 
             }
         }
@@ -73,9 +74,6 @@ public class Invincible : MonoBehaviour
         if (wasBought && inUse)
         {
             activesActivation.abilityId = 2;
-            priceText.text = ("Activated!");
-
-            Debug.Log("already bought");
         }
         else
         {
@@ -95,7 +93,6 @@ public class Invincible : MonoBehaviour
         activesActivation.rechargeTime = 15f;
         gameManager.UpgradePoints -= 10;
         priceText.text = ("Activated!");
-        Debug.Log("ill buy it!");
         backgroundImage.color = Color.green;
         Destroy(price);
     }

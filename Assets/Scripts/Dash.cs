@@ -8,7 +8,6 @@ public class Dash : MonoBehaviour
     private Move playerThing;
     public GameManager gameManager;
     public ActivesScript activesActivation;
-    private float coolDown = 1f;
     private bool wasBought = false;
     public Color originalCol;
     public Image backgroundImage;
@@ -42,7 +41,6 @@ public class Dash : MonoBehaviour
             {
                 inUse = false;
                 priceText.text = ("Deactivated");
-                Debug.Log("already bought, but not used");
                 backgroundImage.color = Color.red;
             }
         }
@@ -55,7 +53,7 @@ public class Dash : MonoBehaviour
             
             if (!isDashing)
             {
-                playerThing.isInvincible = false;
+         
                 StartCoroutine(Dashes());
             }
         }
@@ -67,8 +65,6 @@ public class Dash : MonoBehaviour
         {
             activesActivation.abilityId = 3;
             priceText.text = ("Activated!");
-
-            Debug.Log("already bought");
         }
         else
         {
@@ -88,7 +84,6 @@ public class Dash : MonoBehaviour
         activesActivation.rechargeTime = 3f;
         gameManager.UpgradePoints -= 5;
         priceText.text = ("Activated!");
-        Debug.Log("ill buy it!");
         backgroundImage.color = Color.green;
         Destroy(price);
     }
@@ -96,7 +91,8 @@ public class Dash : MonoBehaviour
     {
         
         isDashing = true;
-   
+        playerThing.canBeHit = false;
+
         Vector3 startPosition = player.transform.position;
         Vector3 endPosition = startPosition + player.transform.forward * dashDistance;
 
@@ -106,7 +102,7 @@ public class Dash : MonoBehaviour
         while (elapsed < duration)
         {
             float t = elapsed / duration;
-            t = 1 - Mathf.Pow(1 - t, 3);  // Cubic ease-out curve
+            t = 1 - Mathf.Pow(1 - t, 3);
 
             player.transform.position = Vector3.Lerp(startPosition, endPosition, t);
 
@@ -116,7 +112,7 @@ public class Dash : MonoBehaviour
 
         // Ensure the player reaches the exact end position
         player.transform.position = endPosition;
-        
+        playerThing.canBeHit = true;
         isDashing = false;
     }
 }
