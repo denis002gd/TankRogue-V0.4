@@ -31,7 +31,7 @@ public class Invincible : MonoBehaviour
         if (Time.time > lastUsedTime + coolDown)
         {
             playerStats.isInvincible = false;
-            playerStats.canBeHit = true;
+            playerStats.willBeHit = true;
         }
         if (wasBought)
         {
@@ -58,12 +58,12 @@ public class Invincible : MonoBehaviour
                 playerStats.invincibilityTimer = 5f;
                
                 lastUsedTime = Time.time;
-                playerStats.canBeHit = false;
+                playerStats.willBeHit = false;
             }
             else
             {
                 
-                playerStats.canBeHit = true;
+                playerStats.willBeHit = true;
 
             }
         }

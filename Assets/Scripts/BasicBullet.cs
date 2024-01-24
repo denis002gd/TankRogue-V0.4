@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class BasicBullet : MonoBehaviour
 {
-    public bool canReflect = false;
-    public float reflectionSpeed = 8f;
+
 
     // Start is called before the first frame update
     void Start()
@@ -21,20 +20,11 @@ public class BasicBullet : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        if (canReflect && collision.gameObject.CompareTag("bounceArea"))
-        {
-            ReflectBullet(collision.contacts[0].normal);
-        }
-        else
+        if (collision.gameObject.CompareTag("player"))
         {
             Destroy(gameObject);
         }
     }
 
-    void ReflectBullet(Vector3 collisionNormal)
-    {
-        Vector3 reflectionDirection = Vector3.Reflect(transform.forward, collisionNormal);
-
-        GetComponent<Rigidbody>().velocity = reflectionDirection * reflectionSpeed;
-    }
+   
 }

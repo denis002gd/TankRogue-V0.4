@@ -23,8 +23,9 @@ public class Move : MonoBehaviour
     [SerializeField] public float pushbackDuration = 0.5f;
     [SerializeField] public float resetDistance = -0.5f;
     [SerializeField] public bool canShoot = true;
+    public bool willBeHit;
     [SerializeField] public bool canShootRL = true;
-    [SerializeField] public bool canBeHit;
+    
     public static Move Instance;
     [Header("Weapon Stats")]
     [SerializeField] public float playerDamage = 20f;
@@ -37,6 +38,7 @@ public class Move : MonoBehaviour
     [SerializeField] public float ReloadSpeed = 2.0f;
     [SerializeField] public float BulletSpeed;
     float nextFire;
+    public Dash dash;
     [Header("Audio Elements")]
     [SerializeField] public AudioSource audioSF;
     [SerializeField] public AudioSource walkAudioSource;
@@ -79,10 +81,7 @@ public class Move : MonoBehaviour
     {
         var transAmount = speed * Time.deltaTime;
         var rotateAmount = rotateSpeed * Time.deltaTime;
-        if (!canBeHit)
-        {
-            Debug.Log(canBeHit);
-        }
+       
       
         AmmoCount.text = Ammo.ToString();
         HealthBar.maxValue = 8;
@@ -233,7 +232,7 @@ public class Move : MonoBehaviour
     private void OnCollisionEnter(Collision other)
     {
         float pushForce = 150f;
-        if (!isInvincible && (other.gameObject.CompareTag("Enemy") || other.gameObject.CompareTag("Enemy bullet")) && canBeHit)
+        if (!isInvincible && (other.gameObject.CompareTag("Enemy") || other.gameObject.CompareTag("Enemy bullet")) && dash.isDashing == false)
         {
             if (playerHealth > 0)
             {

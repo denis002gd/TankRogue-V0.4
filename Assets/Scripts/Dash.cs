@@ -15,7 +15,7 @@ public class Dash : MonoBehaviour
     public Transform player;
     public GameObject PlayerObj;
     public float dashDistance = 5f; 
-    private bool isDashing = false;
+    public bool isDashing = false;
 
     [Header("UiElements")]
     public Button boughtButton;
@@ -91,7 +91,6 @@ public class Dash : MonoBehaviour
     {
         
         isDashing = true;
-        playerThing.canBeHit = false;
 
         Vector3 startPosition = player.transform.position;
         Vector3 endPosition = startPosition + player.transform.forward * dashDistance;
@@ -112,7 +111,6 @@ public class Dash : MonoBehaviour
 
         // Ensure the player reaches the exact end position
         player.transform.position = endPosition;
-        playerThing.canBeHit = true;
         isDashing = false;
     }
 }

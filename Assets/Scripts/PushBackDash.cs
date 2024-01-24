@@ -5,24 +5,25 @@ using UnityEngine;
 public class PushBackDash : MonoBehaviour
 {
     private GameObject player;
-    private Move moveScript;
+    private Dash moveScript;
 
     public float dashDistance = 5f;
     void Start()
     {
-        player = GameObject.FindWithTag("player");
-        moveScript = player.GetComponent<Move>();
+        player = GameObject.FindWithTag("HighDamageBullet");
+        moveScript = player.GetComponent<Dash>();
     }
 
     // Update is called once per frame
     void Update()
     {
-    
+        Debug.Log(moveScript.isDashing);
     }
     private void OnCollisionEnter(Collision collider)
     {
-        if (collider.gameObject.CompareTag("player") && moveScript.canBeHit == false)
+        if (collider.gameObject.CompareTag("player") && moveScript.isDashing == true)
         {
+            Debug.Log("hit");
             StartCoroutine(Dashes());
         }
     }
